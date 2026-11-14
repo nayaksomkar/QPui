@@ -7339,7 +7339,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     ["syllabusStatusFilter", "syllabusSearch"].forEach(id => document.getElementById(id)?.addEventListener(id === "syllabusSearch" ? "input" : "change", renderSyllabusRows));
     const syllabusUploadDialog = document.getElementById("syllabusUploadDialog");
-    document.getElementById("syllabusUploadButton")?.addEventListener("click", async () => { if (!syllabusState.canUpload) return; syllabusState.replaceExisting=false;syllabusState.replacingRecord=null;document.getElementById("syllabusUploadMessage").textContent="";document.getElementById("syllabusUploadTitle").textContent="Upload Syllabus PDF";syllabusUploadDialog?.showModal();const subjectSelect=document.getElementById("syllabusUploadSubject");subjectSelect.disabled=false;try{await loadSyllabusSubjects();const selected=syllabusState.selectedSubjectId;subjectSelect.value=syllabusState.subjects.some(subject=>String(subject.id)===selected)?selected:"";if(!syllabusState.subjects.length&&!isAdminUser())document.getElementById("syllabusUploadMessage").textContent="No subjects are assigned to your account.";validateSyllabusFile(syllabusFileInput?.files?.[0]);}catch(error){console.error("[Syllabus Library] Upload subjects could not be loaded:",error);document.getElementById("syllabusUploadMessage").textContent=apiFailureMessage(error,"available subjects");const placeholder=error?.responseParseError?"Could not read the subject data returned by the API.":error?.status===403?"You do not have permission to access these subjects.":"Could not connect to the API server.";setSubjectOptions(subjectSelect,syllabusState.subjects,placeholder,syllabusState.selectedSubjectId);subjectSelect.disabled=!syllabusState.subjects.length;}});
+    document.getElementById("syllabusUploadButton")?.addEventListener("click", async () => { if (!syllabusState.canUpload) return; syllabusState.replaceExisting=false;syllabusState.replacingRecord=null;document.getElementById("syllabusUploadMessage").textContent="";document.getElementById("syllabusUploadTitle").textContent="Upload Syllabus";syllabusUploadDialog?.showModal();const subjectSelect=document.getElementById("syllabusUploadSubject");subjectSelect.disabled=false;try{await loadSyllabusSubjects();const selected=syllabusState.selectedSubjectId;subjectSelect.value=syllabusState.subjects.some(subject=>String(subject.id)===selected)?selected:"";if(!syllabusState.subjects.length&&!isAdminUser())document.getElementById("syllabusUploadMessage").textContent="No subjects are assigned to your account.";validateSyllabusFile(syllabusFileInput?.files?.[0]);}catch(error){console.error("[Syllabus Library] Upload subjects could not be loaded:",error);document.getElementById("syllabusUploadMessage").textContent=apiFailureMessage(error,"available subjects");const placeholder=error?.responseParseError?"Could not read the subject data returned by the API.":error?.status===403?"You do not have permission to access these subjects.":"Could not connect to the API server.";setSubjectOptions(subjectSelect,syllabusState.subjects,placeholder,syllabusState.selectedSubjectId);subjectSelect.disabled=!syllabusState.subjects.length;}});
     document.getElementById("syllabusCancelUpload")?.addEventListener("click", () => { if (!syllabusState.activeUpload) syllabusUploadDialog?.close(); });
     document.querySelectorAll('[data-close="syllabusUploadDialog"]').forEach(button => button.addEventListener("click", () => { if (!syllabusState.activeUpload) syllabusUploadDialog?.close(); }));
     const syllabusFileInput=document.getElementById("syllabusUploadFile");
@@ -7347,8 +7347,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function validateSyllabusFile(file) {
         const error=document.getElementById("syllabusUploadFileError");
         let message="";
-        if(file && (!/\.pdf$/i.test(file.name) || (file.type && file.type!=="application/pdf"))) message="Unsupported file format. Select a PDF file.";
-        else if(file && file.size===0) message="The selected PDF is empty.";
+        const extension=file?.name?.split(".").pop()?.toLowerCase();
+        if(file && !["pdf","docx"].includes(extension)) message="Unsupported file format. Select a PDF or DOCX file.";
+        else if(file && file.size===0) message="The selected file is empty.";
         else if(file && file.size>50*1024*1024) message="This file exceeds the 50 MB upload limit.";
         if(error)error.textContent=message;
         const selectedSubjectId = document.getElementById("syllabusUploadSubject")?.value || "";
@@ -7393,10 +7394,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!syllabusState.canUpload) return;
         const subject = document.getElementById("syllabusUploadSubject")?.value, file = syllabusFileInput?.files?.[0], button = document.getElementById("syllabusUploadSubmit"), msg = document.getElementById("syllabusUploadMessage"), progress=document.getElementById("syllabusUploadProgress"), progressWrap=document.getElementById("syllabusUploadProgressWrap"), progressLabel=document.getElementById("syllabusUploadProgressLabel");
         if (!subject || !syllabusState.subjects.some(item => String(item.id) === String(subject))) { if(msg) msg.textContent = "Select a valid subject."; return; }
-        if (!file) { if(msg) msg.textContent = "Choose a PDF file."; return; }
+        if (!file) { if(msg) msg.textContent = "Choose a PDF or DOCX file."; return; }
         if (!validateSyllabusFile(file)) { if(msg) msg.textContent=document.getElementById("syllabusUploadFileError").textContent; return; }
         syllabusState.uploading = true;
-        button.disabled = true; document.getElementById("syllabusCancelUpload").disabled=true; progressWrap?.classList.remove("hidden"); if(msg) msg.textContent = "Uploading PDF…";
+        button.disabled = true; document.getElementById("syllabusCancelUpload").disabled=true; progressWrap?.classList.remove("hidden"); if(msg) msg.textContent = "Uploading syllabus…";
         try {
             const uploaded=await uploadSyllabusFile(subject,file,value=>{if(progress)progress.value=value;if(progressLabel)progressLabel.textContent=`${value}%`;});
             const syllabusId=uploaded.syllabus_id ?? uploaded.id;

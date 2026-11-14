@@ -1661,9 +1661,9 @@
                                 </select>
                             </div>
                             <div id="syllabusLibraryAdminActions" class="syllabus-heading-action">
-                        <button type="button" class="btn btn-primary" id="syllabusUploadButton" aria-describedby="syllabusUploadPermissionHint" title="Upload a syllabus PDF">
+                        <button type="button" class="btn btn-primary" id="syllabusUploadButton" aria-describedby="syllabusUploadPermissionHint" title="Upload a syllabus">
                                     <svg class="btn-icon" aria-hidden="true"><use id="syllabusUploadIcon" href="#icon-upload"/></svg>
-                                    <span>+ Upload Syllabus PDF</span>
+                                    <span>+ Upload Syllabus</span>
                                 </button>
                                 <span id="syllabusUploadPermissionHint" class="syllabus-permission-hint" hidden>Checking upload access…</span>
                             </div>
@@ -1679,7 +1679,7 @@
                     <dialog id="syllabusUploadDialog" class="modal admin-dialog" aria-labelledby="syllabusUploadTitle">
                         <div class="admin-dialog-shell">
                             <div class="admin-dialog-header">
-                                <div><h3 id="syllabusUploadTitle">Upload Syllabus PDF</h3><p>Add a syllabus PDF to a subject.</p></div>
+                                <div><h3 id="syllabusUploadTitle">Upload Syllabus</h3><p>Add a syllabus to a subject.</p></div>
                                 <button type="button" class="btn btn-secondary small" id="syllabusCancelUpload">Cancel</button>
                             </div>
                             <form id="syllabusUploadForm" novalidate>
@@ -1690,13 +1690,13 @@
                                         <select id="syllabusUploadSubject" required><option value="">Loading subjects...</option></select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="syllabusUploadFile">PDF file <span class="required">*</span></label>
+                                        <label for="syllabusUploadFile">Syllabus file <span class="required">*</span></label>
                                         <label class="syllabus-drop-area" id="syllabusDropArea" for="syllabusUploadFile">
                                             <svg aria-hidden="true"><use href="#icon-upload"/></svg>
-                                            <strong>Drop your syllabus PDF here or Browse Files</strong>
-                                            <span>PDF only · up to 50 MB</span>
+                                            <strong>Drop your syllabus file here or Browse Files</strong>
+                                            <span>PDF or DOCX · up to 50 MB</span>
                                         </label>
-                                        <input type="file" id="syllabusUploadFile" accept=".pdf,application/pdf" required class="syllabus-file-input">
+                                        <input type="file" id="syllabusUploadFile" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required class="syllabus-file-input">
                                         <p id="syllabusUploadFileName" class="distribution-total">No file selected.</p>
                                         <p id="syllabusUploadFileError" class="field-error" role="alert"></p>
                                     </div>
@@ -1708,7 +1708,7 @@
                                 </div>
                                 <div class="modal-actions admin-dialog-footer">
                                     <button type="button" class="btn btn-secondary" data-close="syllabusUploadDialog">Cancel</button>
-                                    <button type="submit" class="btn btn-primary" id="syllabusUploadSubmit" disabled>Upload PDF</button>
+                                    <button type="submit" class="btn btn-primary" id="syllabusUploadSubmit" disabled>Upload Syllabus</button>
                                 </div>
                             </form>
                         </div>
